@@ -70,14 +70,35 @@ int encrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 			printf("HexToChar encrypt failed\n");
 		return FAILED;
 	}
-#ifdef USE_AES_CBC
+#if defined(USE_AES_CBC) || defined(USE_AES_ECB)
 	unsigned long length = strlen(hexContent) / 2;
 	unsigned long nlen = ((length % AES_BLOCK_LEN) == 0) ? length : (length + AES_BLOCK_LEN - length % AES_BLOCK_LEN);
 	*ppOutput = (byte *)malloc(nlen+1);
 	memset(*ppOutput,'\0',nlen+1);
 	*pLength = nlen;
-
+#ifdef USE_AES_CBC
 	AES128_CBC_encrypt_buffer(*ppOutput, (unsigned char*)encrypt, nlen, (const unsigned char *)key, (const unsigned char *)(key + AES_BLOCK_LEN));
+#else
+	AES128_ECB_encrypt((unsigned char*)encrypt, (const unsigned char *)key, *ppOutput);
+#endif
+#endif
+
+#if defined(USE_DES) || defined(USE_3DES)
+	unsigned long nlen = strlen(hexContent)/2;
+	byte *to_enc = (byte *)malloc(nlen+nlen%8);:w
+
+	if(nlen<8)
+		*ppOutput = (byte *)malloc(8+1);
+	else
+		*ppOutput = (byte *)malloc(nlen+1);
+	memset(*ppOutput,'\0',nlen+1);
+	*pLength = nlen;
+#ifdef USE_DES
+	DesEncrypt((byte *)encrypt, (byte *)key, *ppOutput);
+#else
+	TripleDesEncryptCBC((byte *)encrypt, nlen, (byte *)key, *ppOutput);
+#endif
+#endif
 	if(key)
 	{
 		free(key);
@@ -89,11 +110,11 @@ int encrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 		encrypt = NULL;
 	}
 
-	if(strlen((char *)*ppOutput) == *pLength)
+	if(strlen((char *)*ppOutput) != 0)
 	{
+		*pLength = strlen((char *)*ppOutput);
 		return SUCCESS;
 	}
-#endif
 	printf("*pLength %d <> %d\n",*pLength,strlen((char *)*ppOutput));
 	return FAILED;
 }
@@ -139,13 +160,29 @@ int decrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 			printf("HexToChar encrypt failed\n");
 		return FAILED;
 	}
-#ifdef USE_AES_CBC
+#if defined(USE_AES_CBC) || defined(USE_AES_ECB)
 	unsigned long length = strlen(hexContent) / 2;
 	unsigned long nlen = ((length % AES_BLOCK_LEN) == 0) ? length : (length + AES_BLOCK_LEN - length % AES_BLOCK_LEN);
 	*ppOutput = (byte *)malloc(nlen+1);
 	memset(*ppOutput,'\0',nlen+1);
-
+#ifdef USE_AES_CBC
 	AES128_CBC_decrypt_buffer(*ppOutput, (unsigned char*)encrypt, nlen, (const unsigned char *)key, (const unsigned char *)(key + AES_BLOCK_LEN));
+#else
+	AES128_ECB_decrypt((unsigned char *)encrypt, (const unsigned char *)key, *ppOutput);
+#endif
+#endif
+
+#if defined(USE_DES) || defined(USE_3DES)
+	unsigned long nlen = strlen(hexContent)/2;
+	*ppOutput = (byte *)malloc(nlen+1);
+	memset(*ppOutput,'\0',nlen+1);
+	*pLength = nlen;
+#ifdef USE_DES
+	DesDecrypt((byte *)encrypt, (byte *)key, *ppOutput);
+#else
+	TripleDesDecryptCBC((byte *)encrypt, nlen, (byte *)key, *ppOutput);
+#endif
+#endif
 	if(key)
 	{
 		free(key);
@@ -162,7 +199,6 @@ int decrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 		*pLength = strlen((char *)*ppOutput);
 		return SUCCESS;
 	}
-#endif
 	printf("*pLength %d <> %d\n",*pLength,strlen((char *)*ppOutput));
 	return FAILED;
 	return 0;

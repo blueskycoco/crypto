@@ -348,7 +348,7 @@ void TripleDesDecryptCBC(byte *m, int msg_len, byte *k, byte *out)
     memcpy(vector,m+i*8,8); 
   }
 }
-
+#if 0
 // Test Triple DES (2-block CBC, with variant key)
 int main(void)
 {
@@ -375,4 +375,4 @@ int main(void)
   ShowHex(decrypted,16,"Decrypted:   ");
   return 0;
 }
-
+#endif
