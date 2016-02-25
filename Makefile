@@ -18,5 +18,10 @@ aes.o: aes.c aes.h
 rc4.o: rc4.c rc4.h
 	$(CC) $(CFLAGS) -c rc4.c
 
+use_aes_cbc_enc: adapter.c adapter.h encrypt.c
+	$(CC) $(CFLAGS) -DUSE_AES_CBC -o encrypt encrypt.c adapter.c -L. aes.a
+use_aes_cbc_dec: adapter.c adapter.h decrypt.c
+	$(CC) $(CFLAGS) -DUSE_AES_CBC -o decrypt decrypt.c adapter.c -L. aes.a
+
 clean:
 	$(RM) *.o crypto *~ *.a
