@@ -5,6 +5,8 @@ extern "C" {
 #endif
 #if defined(USE_AES_CBC) || defined(USE_AES_ECB)
 #include "aes.h"
+#include <stdio.h>
+#include <string.h>
 typedef unsigned char byte;
 #endif
 #if defined(USE_DES) || defined(USE_3DES)
@@ -12,6 +14,8 @@ typedef unsigned char byte;
 #endif
 #if defined(USE_RC4)
 #include "rc4.h"
+#include <stdio.h>
+#include <string.h>
 typedef unsigned char byte;
 #endif
 int encrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int* pLength);

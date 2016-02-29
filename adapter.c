@@ -85,18 +85,52 @@ int encrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 
 #if defined(USE_DES) || defined(USE_3DES)
 	unsigned long nlen = strlen(hexContent)/2;
-	byte *to_enc = (byte *)malloc(nlen+nlen%8);:w
-
-	if(nlen<8)
-		*ppOutput = (byte *)malloc(8+1);
-	else
-		*ppOutput = (byte *)malloc(nlen+1);
-	memset(*ppOutput,'\0',nlen+1);
-	*pLength = nlen;
+	
 #ifdef USE_DES
-	DesEncrypt((byte *)encrypt, (byte *)key, *ppOutput);
+	if(nlen<8)
+	{	
+		*ppOutput = (byte *)malloc(8+1);
+		memset(*ppOutput,'\0',8+1);
+		*pLength = 8;
+	}
+	else
+	{
+		*ppOutput = (byte *)malloc((nlen/8+1)*8);
+		memset(*ppOutput,'\0',(nlen/8+1)*8);
+		*pLength = (nlen/8+1)*8;
+	}
+	int i=0;
+	byte *p=*ppOutput;
+	for(i=0;i<nlen/8;i++)
+	{
+	DesEncrypt((byte *)encrypt+8*i, (byte *)key, p);
+	p=p+8;
+	}
+	if(nlen%8!=0)
+		DesEncrypt((byte *)encrypt+i*8, (byte *)key, p);
 #else
-	TripleDesEncryptCBC((byte *)encrypt, nlen, (byte *)key, *ppOutput);
+	char *encrypt1=NULL;
+	if(nlen%8!=0)
+	{
+		*ppOutput=(byte *)malloc(nlen+8-nlen%8+1);
+		memset(*ppOutput,'\0',nlen+8-nlen%8+1);
+		encrypt1=(char *)malloc(nlen+8-nlen%8+1);
+		memset(encrypt1,'\0',nlen+8-nlen%8+1);
+		memcpy(encrypt1,encrypt,nlen);
+		memset(encrypt1+nlen,'\0',8-nlen%8);
+		nlen=nlen+8-nlen%8;
+	}
+	else
+	{
+		*ppOutput=(byte *)malloc(nlen+1);
+		memset(*ppOutput,'\0',nlen+1);
+		encrypt1=(char *)malloc(nlen+1);
+		memset(encrypt1,'\0',nlen+1);
+		memcpy(encrypt1,encrypt,nlen);
+	}
+	TripleDesEncryptCBC((byte *)encrypt1, nlen, (byte *)key, *ppOutput);
+	free(encrypt1);
+	encrypt1=NULL;
 #endif
 #endif
 	if(key)
@@ -174,13 +208,53 @@ int decrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 
 #if defined(USE_DES) || defined(USE_3DES)
 	unsigned long nlen = strlen(hexContent)/2;
-	*ppOutput = (byte *)malloc(nlen+1);
-	memset(*ppOutput,'\0',nlen+1);
-	*pLength = nlen;
+	
 #ifdef USE_DES
-	DesDecrypt((byte *)encrypt, (byte *)key, *ppOutput);
+	if(nlen<8)
+	{
+		*ppOutput = (byte *)malloc(8+1);
+		memset(*ppOutput,'\0',8+1);
+		*pLength = 8;
+	}
+	else
+	{
+		*ppOutput = (byte *)malloc((nlen/8+1)*8);
+		memset(*ppOutput,'\0',(nlen/8+1)*8);
+		*pLength = (nlen/8+1)*8;
+	}
+	int i=0;
+	byte *p=*ppOutput;
+	for(i=0;i<nlen/8;i++)
+	{
+		DesDecrypt((byte *)encrypt+8*i, (byte *)key, p);
+		p=p+8;
+	}
+	if(nlen%8!=0)
+		DesEncrypt((byte *)encrypt+8*i, (byte *)key, p);	
 #else
-	TripleDesDecryptCBC((byte *)encrypt, nlen, (byte *)key, *ppOutput);
+	char *encrypt1=NULL;
+	if(nlen%8!=0)
+	{
+		*ppOutput=(byte *)malloc(nlen+8-nlen%8+1);
+		memset(*ppOutput,'\0',nlen+8-nlen%8+1);
+		encrypt1=(char *)malloc(nlen+8-nlen%8+1);
+		memset(encrypt1,'\0',nlen+8-nlen%8+1);
+		memcpy(encrypt1,encrypt,nlen);
+		memset(encrypt1+nlen,'\0',8-nlen%8);
+		nlen=nlen+8-nlen%8;
+	}
+	else
+	{
+		*ppOutput=(byte *)malloc(nlen+1);
+		memset(*ppOutput,'\0',nlen+1);
+		encrypt1=(char *)malloc(nlen+1);
+		memset(encrypt1,'\0',nlen+1);
+		memcpy(encrypt1,encrypt,nlen);
+	}
+
+	TripleDesDecryptCBC((byte *)encrypt1, nlen, (byte *)key, *ppOutput);
+	free(encrypt1);
+	encrypt1=NULL;
 #endif
 #endif
 	if(key)
