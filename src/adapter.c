@@ -5,6 +5,21 @@
 #define FAILED	1
 #define SUCCESS	0
 #define AES_BLOCK_LEN 16
+#ifdef LOG_OUT
+#ifdef ANDROID
+#include <android/log.h>
+#define LOG_TAG NULL
+#define LOG_INFO 3	//ANDROID_LOG_DEBUG
+#define DEBUG(...) __android_log_print(LOG_INFO, LOG_TAG, __VA_ARGS__) 
+#else
+#define DEBUG printf
+#endif
+#else
+#define DEBUG 
+#endif
+#ifdef LOG_OUT
+#define _xc_preserve_interface
+#endif
 char hex_to_char(char hex)
 {
 	char tmp = 0;
@@ -19,31 +34,32 @@ char hex_to_char(char hex)
 void HexToChar(const char *hex,char **out)
 {
 	int i = 0;
-	//printf("HexToChar len %d\n",strlen(hex));
+	//DEBUG("HexToChar len %d\n",strlen(hex));
 	*out = (char *)malloc(strlen(hex)/2 + 1);
 	memset(*out,'\0',strlen(hex)/2 + 1);
 	for(i = 0;i < strlen(hex);i=i+2)
 	{
 		(*out)[i/2] = (hex_to_char(hex[i]) * 16 ) + hex_to_char(hex[i+1]);
 	}
-	//printf("orignal hex %s\n",hex);
-	//printf("after to char %s\n",*out);
+	//DEBUG("orignal hex %s\n",hex);
+	//DEBUG("after to char %s\n",*out);
 }
+_xc_preserve_interface
 int encrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int* pLength)
 {
 	if(hexKey == NULL || hexContent == NULL || pLength == NULL || strlen(hexKey) != 64)
 	{
 		if(hexKey == NULL)
-			printf("hexKey is NULL\n");
+			DEBUG("hexKey is NULL\n");
 
 		if(hexContent == NULL)
-			printf("hexContent is NULL\n");
+			DEBUG("hexContent is NULL\n");
 
 		if(pLength == NULL)
-			printf("pLength is NULL\n");
+			DEBUG("pLength is NULL\n");
 
 		if(strlen(hexKey) != 64)
-			printf("hexKey len is not 64 , %d\n",(int)strlen(hexKey));
+			DEBUG("hexKey len is not 64 , %d\n",(int)strlen(hexKey));
 		
 		return FAILED;
 	}
@@ -59,7 +75,7 @@ int encrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 			key = NULL;
 		}
 		else
-			printf("HexToChar key failed\n");
+			DEBUG("HexToChar key failed\n");
 
 		if(encrypt)
 		{
@@ -67,7 +83,7 @@ int encrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 			encrypt = NULL;
 		}
 		else
-			printf("HexToChar encrypt failed\n");
+			DEBUG("HexToChar encrypt failed\n");
 		return FAILED;
 	}
 #if defined(USE_AES_CBC) || defined(USE_AES_ECB)
@@ -176,25 +192,25 @@ int encrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 		*pLength = strlen((char *)*ppOutput);
 		return SUCCESS;
 	}
-	printf("*pLength %d <> %d\n",(int)*pLength,(int)strlen((char *)*ppOutput));
+	DEBUG("*pLength %d <> %d\n",(int)*pLength,(int)strlen((char *)*ppOutput));
 	return FAILED;
 }
-
+_xc_preserve_interface
 int decrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int* pLength)
 {
 	if(hexKey == NULL || hexContent == NULL || pLength == NULL || strlen(hexKey) != 64)
 	{
 		if(hexKey == NULL)
-			printf("hexKey is NULL\n");
+			DEBUG("hexKey is NULL\n");
 
 		if(hexContent == NULL)
-			printf("hexContent is NULL\n");
+			DEBUG("hexContent is NULL\n");
 
 		if(pLength == NULL)
-			printf("pLength is NULL\n");
+			DEBUG("pLength is NULL\n");
 
 		if(strlen(hexKey) != 64)
-			printf("hexKey len is not 64 , %d\n",(int)strlen(hexKey));
+			DEBUG("hexKey len is not 64 , %d\n",(int)strlen(hexKey));
 		
 		return FAILED;
 	}
@@ -210,7 +226,7 @@ int decrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 			key = NULL;
 		}
 		else
-			printf("HexToChar key failed\n");
+			DEBUG("HexToChar key failed\n");
 
 		if(encrypt)
 		{
@@ -218,7 +234,7 @@ int decrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 			encrypt = NULL;
 		}
 		else
-			printf("HexToChar encrypt failed\n");
+			DEBUG("HexToChar encrypt failed\n");
 		return FAILED;
 	}
 #if defined(USE_AES_CBC) || defined(USE_AES_ECB)
@@ -328,7 +344,7 @@ int decrypt_mg(const char* hexKey, const char* hexContent, byte** ppOutput, int*
 		*pLength = strlen((char *)*ppOutput);
 		return SUCCESS;
 	}
-	printf("*pLength %d <> %d\n",(int)*pLength,(int)strlen((char *)*ppOutput));
+	DEBUG("*pLength %d <> %d\n",(int)*pLength,(int)strlen((char *)*ppOutput));
 	return FAILED;
 	return 0;
 }

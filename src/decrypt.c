@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "adapter.h"
-//#include <mcheck.h>
+#include <mcheck.h>
 void CharToHex(char *str,char *hex)
 {
 	int ix=0;
@@ -32,8 +32,8 @@ int main(int argc,char *argv[])
 	int i = 0;
 	byte *ppOutput = NULL;
 	int pLength = 0;
-	//setenv("MALLOC_TRACE", "output", 1);
-	//mtrace();
+	setenv("MALLOC_TRACE", "output", 1);
+	mtrace();
 	printf("argv[1] %s\n",argv[1]);
 	printf("argv[2] %s\n",argv[2]);
 	char *hex_key=(char *)malloc(2*strlen(argv[1])+1);

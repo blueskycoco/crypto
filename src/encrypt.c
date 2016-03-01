@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "adapter.h"
-//#include <mcheck.h>
+#include <mcheck.h>
 void CharToHex(char *str,char *hex)
 {
 	int ix=0;
@@ -26,33 +26,37 @@ void CharToHex(char *str,char *hex)
 	printf("Hex %s\n",hex);
 	return ;
 }
-
 int main(int argc,char *argv[])
 {
 	int i = 0;
 	byte *ppOutput = NULL;
 	int pLength = 0;
-	//setenv("MALLOC_TRACE", "output", 1);
-	//mtrace();
+	setenv("MALLOC_TRACE", "output1", 1);
+	mtrace();
 	printf("argv[1] %s\n",argv[1]);
 	printf("argv[2] %s\n",argv[2]);
 	char *hex_key=(char *)malloc(2*strlen(argv[1])+1);
 	memset(hex_key,'\0',strlen(argv[1])+1);
 	CharToHex(argv[1],hex_key);
-	if(0 == decrypt_mg(hex_key, argv[2], &ppOutput, &pLength))
+	char *hex_enc=(char *)malloc(2*strlen(argv[2])+1);
+	memset(hex_enc,'\0',strlen(argv[2])+1);
+	CharToHex(argv[2],hex_enc);
+	if(0 == encrypt_mg(hex_key, hex_enc, &ppOutput, &pLength))
 	{
-		printf("decrypt_mg ok\n");
-		printf("decrypt len %d:\n",pLength);
+		printf("encrypt_mg ok\n");
+		printf("encrypt len %d:\n",pLength);
 		for(i=0;i<pLength;i++)
-			printf("%c",ppOutput[i]);
+			printf("%02x",ppOutput[i]);
 		printf("\n");
 		free(ppOutput);
 		ppOutput = NULL;
 	}
 	else
-		printf("decrypt_mg failed\n");
+		printf("encrypt_mg failed\n");
 	free(hex_key);
+	free(hex_enc);
 	hex_key = NULL;
+	hex_enc = NULL;
 	return 0;
 }
 

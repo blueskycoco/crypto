@@ -1,0 +1,78 @@
+#
+# Target-specific definitions for gcc_4.3_linux_x86
+#
+
+AR = ar
+CC = gcc
+COMPILER = gcc_4.4_android_arm
+CXX = g++
+CP = cp -p
+DLLEXT = so
+DLL_LDFLAGS = -shared
+ECHO = echo
+EXEEXT = 
+EXE_FLAG = -o 
+LD = "$(XCODE_HOME)"/bin/xlink ---compiler $(COMPILER) ---set_native_linker g++ ---set_native_librarian ar ---use_evaluation
+LD_OUTFLAG = -o 
+LIB_PREFIX = lib
+LIB_SUFFIX = 
+LIBEXT = a
+OBJEXT = o
+ARFLAGS = cr 
+CAT = cat
+CCSHARED = $(CC) -m32 -shared -Wl,--strip-all
+CP = cp -p
+CUR_DIR = LD_LIBRARY_PATH=.:$$LD_LIBRARY_PATH ./
+CXXFLAGS =
+DIFF = diff
+DLL_CFLAGS = -fPIC
+DUMPBIN = nm
+GREP = fgrep
+GREPC = fgrep -c
+IMPLIBEXT = $(DLLEXT)
+# NB: IMPLIB_LDFLAG requires defintion of IMPLIB in calling makefile
+IMPLIB_LDFLAG = && $(CP) $(IMPLIB) $(IMPLIB).$(IMPLIBEXT)
+MV = mv
+RM = rm -rf
+RMDIR = rm -rf
+GREPS = fgrep
+SHOW_DYNAMIC_SYMBOLS = $(DUMPBIN) --dynamic
+SHOW_SIZE = size
+SYSV_HASH = -Wl,--hash-style=sysv
+STF_LDFLAGS = -ldl
+
+#
+# Generic definitions
+#
+
+INSTANCE = eval
+CFLAGS = -O2 -m32 -O2 -fno-tree-vrp -DXC_NO_WFOPEN_SUPPORT -fPIC -fno-strict-aliasing -fwrapv -I "$(XCODE_HOME)"/include/$(COMPILER)
+CXXFLAGS = $(CFLAGS)
+LDFLAGS = -m32
+RMREPORT = $(RMDIR) report
+RMSIB = $(RMDIR) sib
+RMSIB2 = $(RMDIR) sib2
+XCC="$(XCODE_HOME)"/bin/xcode -compiler $(COMPILER) -c $(CONFIGFILE) -I "$(XCODE_HOME)"/include
+SECURE_MANGLING_OFF_FLAG= -secure_mangling off 
+XPP_FLAGS= 
+STF_FLAGS = -D USE_STF -D XC_TRACE -D XC_STF_DEBUG -D XC_MAIN_MODULE=EXEModule$(EXEEXT)
+KEY2CODE = "$(XCODE_HOME)"/bin/key2code -compiler $(COMPILER)
+XCBINCRYPT = "$(XCODE_HOME)"/bin/xcbincrypt -compiler $(COMPILER)
+XCRENAME = "$(XCODE_HOME)"/bin/xcrename -compiler $(COMPILER)
+WBCODEGEN = "$(XCODE_HOME)"/bin/wbcodegen -compiler $(COMPILER)
+WBDATAGEN = "$(XCODE_HOME)"/bin/wbdatagen -compiler $(COMPILER)
+XPP  = "$(XCODE_HOME)"/bin/xpp -compiler $(COMPILER) $(XPP_FLAGS)
+XCLOAK = "$(XCODE_HOME)"/bin/xcloak -compiler $(COMPILER)
+EBAD_LIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_adb_ebad.xlib:$(INSTANCE)
+XCIVLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_iv.xlib:$(INSTANCE)
+XCTBADLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_adb_tbad.xlib:$(INSTANCE)
+DGWBAESLIB = -use_evaluation -flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_wb_aes.xlib:$(INSTANCE)
+DGWBRSALIB = -use_evaluation -flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_wb_rsa.xlib:$(INSTANCE)
+XCWBSTUBLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_wb_stub.xlib:$(INSTANCE)
+XCWBSMOOTHLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_wb_smooth.xlib:$(INSTANCE)
+XCWBAESLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_wb_aes.xlib:$(INSTANCE)
+XCWBRSALIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_wb_rsa.xlib:$(INSTANCE)
+XCFLEXBINLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_flexbin.xlib:$(INSTANCE)
+XCPDTLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_pdt.xlib:$(INSTANCE)
+XCWBUTILSLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER)/xc_wb_utils.xlib:$(INSTANCE)
+

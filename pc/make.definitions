@@ -1,0 +1,103 @@
+#
+# Target-specific definitions for gcc_linux
+#
+
+AR = ar
+CC = gcc
+LINK = g++
+COMPILER = gcc_4.3_linux_x64
+COMPILER_FAMILY = gcc_linux
+CXX = g++
+CP = cp -p
+HOST_OS=linux
+NATIVE_FAMILY         = GCC
+NATIVE_LIBRARIAN      = ar
+NATIVE_DIALECT        = gcc_4.3_linux_x86
+NATIVE_DIALECT_2      = gcc_4.3_linux_x64
+UNIVERSAL_DIALECT     = u_gcc_x86
+EXT_UNIVERSAL_DIALECT = eu_gcc_x86
+Mixed_other_opts = ---set_native_linker g++ ---set_native_librarian ar
+_CDECL__ = __attribute__\(\(__cdecl__\)\)
+XPP_MIXED_OTHERS =
+XLINK_MIXED_OTHERS =---set_native_linker g++ ---set_native_librarian ar -m32
+NATIVE_COMPILER_MIXED =-set_native_compiler "gcc -m32"
+CC_MIXED_OTHERS =-c -m32
+EXE_DIR_MIXED_OTHERS =./
+export DLLEXT = so
+export EXEEXT = 
+DLL_LDFLAGS = -shared
+ECHO = echo
+EXE_FLAG = -o 
+LD = "$(XCODE_HOME)"/bin/xlink ---compiler $(COMPILER) ---set_native_linker g++ ---set_native_librarian ar
+LD_OUTFLAG = -o 
+LIB_PREFIX = lib
+LIB_SUFFIX = 
+LIBEXT = a
+OBJEXT = o
+ARFLAGS = cr 
+CAT = cat
+CCSHARED = $(CC) -m32 -shared -Wl,--strip-all
+CP = cp -p
+CUR_DIR = LD_LIBRARY_PATH=.:$$LD_LIBRARY_PATH ./
+CXXFLAGS =
+DIFF = diff
+DLL_CFLAGS = -fPIC
+DUMPBIN = nm
+GREP = fgrep
+GREPC = fgrep -c
+IMPLIBEXT = $(DLLEXT)
+# NB: IMPLIB_LDFLAG requires defintion of IMPLIB in calling makefile
+IMPLIB_LDFLAG = && $(CP) $(IMPLIB) $(IMPLIB).$(IMPLIBEXT)
+MV = mv
+RM = rm -rf
+RMDIR = rm -rf
+GREPS = fgrep
+SHOW_DYNAMIC_SYMBOLS = $(DUMPBIN) --dynamic
+SHOW_SIZE = size
+SYSV_HASH = -Wl,--hash-style=sysv
+
+#
+# Generic definitions
+#
+
+INSTANCE = eval
+CFLAGS = -O2 -m32 -O2 -fno-tree-vrp -DXC_NO_WFOPEN_SUPPORT -fPIC -fno-strict-aliasing -fwrapv -I "$(XCODE_HOME)"/include
+CXXFLAGS = $(CFLAGS)
+LDFLAGS = -m32
+RMREPORT = $(RMDIR) report
+RMSIB = $(RMDIR) sib
+RMSIB2 = $(RMDIR) sib2
+XCC="$(XCODE_HOME)"/bin/xcode -compiler $(COMPILER) -c $(CONFIGFILE) -I "$(XCODE_HOME)"/include
+SECURE_MANGLING_OFF_FLAG= -secure_mangling off 
+XPP_FLAGS= 
+XPROV_NATIVE_FLAGS=-Xcc "-O2 -m32 -O2 -fno-tree-vrp -DXC_NO_WFOPEN_SUPPORT -fPIC -fno-strict-aliasing -fwrapv"
+KEY2CODE = "$(XCODE_HOME)"/bin/key2code -compiler $(COMPILER)
+XCBINCRYPT = "$(XCODE_HOME)"/bin/xcbincrypt -compiler $(COMPILER)
+XCRENAME = "$(XCODE_HOME)"/bin/xcrename -compiler $(COMPILER)
+WBCODEGEN = "$(XCODE_HOME)"/bin/wbcodegen -compiler $(COMPILER)
+WBDATAGEN = "$(XCODE_HOME)"/bin/wbdatagen -compiler $(COMPILER)
+XPP  = "$(XCODE_HOME)"/bin/xpp -compiler $(COMPILER) $(XPP_FLAGS)
+XCLOAK = "$(XCODE_HOME)"/bin/xcloak -compiler $(COMPILER)
+EBAD_LIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_adb_ebad.xlib:$(INSTANCE) ---use_evaluation
+XCIVLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_iv.xlib:$(INSTANCE) ---use_evaluation
+XCTBADLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_adb_tbad.xlib:$(INSTANCE) ---use_evaluation
+DGWBAESLIB = -flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_aes.xlib:$(INSTANCE) -use_evaluation
+DGWBRSALIB = -flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_rsa.xlib:$(INSTANCE) -use_evaluation
+DGWBECCLIB = -flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_ecc.xlib:$(INSTANCE) -use_evaluation
+DGWBSHALIB = -flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_sha.xlib:$(INSTANCE) -use_evaluation
+XCWBSTUBLIB = "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/libxc_wb_stub.a
+XCWBSMOOTHLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_smooth.xlib:$(INSTANCE) ---use_evaluation
+XCWBAESLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_aes.xlib:$(INSTANCE) ---use_evaluation
+XCWBRSALIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_rsa.xlib:$(INSTANCE) ---use_evaluation
+XCWBECCLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_ecc.xlib:$(INSTANCE) ---use_evaluation
+XCWBSHALIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_sha.xlib:$(INSTANCE) ---use_evaluation
+XCSHEAPLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_sheap.xlib:$(INSTANCE) ---use_evaluation
+XCFLEXBINLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_flexbin.xlib:$(INSTANCE) ---use_evaluation
+XCPDTLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_pdt.xlib:$(INSTANCE) ---use_evaluation
+XCWBUTILSLIB = ---flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_wb_utils.xlib:$(INSTANCE) ---use_evaluation
+
+XCC_XCTBADLIB = -flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_adb_tbad.xlib:$(INSTANCE) -use_evaluation
+XCC_EBAD_LIB = -flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_adb_ebad.xlib:$(INSTANCE) -use_evaluation
+XCC_XCSHEAPLIB = -flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_sheap.xlib:$(INSTANCE) -use_evaluation
+XCC_XCPDTLIB = -flexlib "$(XCODE_HOME)"/lib/$(COMPILER_FAMILY)/xc_pdt.xlib:$(INSTANCE) -use_evaluation
+

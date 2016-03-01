@@ -1,0 +1,54 @@
+CC = gcc
+CFLAGS = -g -Wall
+AFLAGS = rcs
+AR = ar
+default: des.a aes.a rc4.a
+des.a: des.o
+	$(AR) $(AFLAGS) des.a des.o
+aes.a: aes.o
+	$(AR) $(AFLAGS) aes.a aes.o
+rc4.a: rc4.o
+	$(AR) $(AFLAGS) rc4.a rc4.o
+
+des.o: ../src/des.c ../src/des.h
+	$(CC) $(CFLAGS) -c ../src/des.c
+aes.o: ../src/aes.c ../src/aes.h
+	$(CC) $(CFLAGS) -c ../src/aes.c
+rc4.o: ../src/rc4.c ../src/rc4.h
+	$(CC) $(CFLAGS) -c ../src/rc4.c
+
+enc: ../src/adapter.c ../src/encrypt.c 
+ifeq ($(CRYPTO),USE_AES_CBC)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o encrypt ../src/encrypt.c ../src/adapter.c -L. aes.a
+endif
+ifeq ($(CRYPTO),USE_AES_ECB)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o encrypt ../src/encrypt.c ../src/adapter.c -L. aes.a
+endif
+ifeq ($(CRYPTO),USE_DES)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o encrypt ../src/encrypt.c ../src/adapter.c -L. des.a
+endif
+ifeq ($(CRYPTO),USE_3DES)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o encrypt ../src/encrypt.c ../src/adapter.c -L. des.a
+endif
+ifeq ($(CRYPTO),USE_RC4)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o encrypt ../src/encrypt.c ../src/adapter.c -L. rc4.a
+endif
+dec: ../src/adapter.c ../src/decrypt.c
+ifeq ($(CRYPTO),USE_AES_CBC)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o decrypt ../src/decrypt.c ../src/adapter.c -L. aes.a
+endif
+ifeq ($(CRYPTO),USE_AES_ECB)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o decrypt ../src/decrypt.c ../src/adapter.c -L. aes.a
+endif
+ifeq ($(CRYPTO),USE_DES)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o decrypt ../src/decrypt.c ../src/adapter.c -L. des.a
+endif
+ifeq ($(CRYPTO),USE_3DES)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o decrypt ../src/decrypt.c ../src/adapter.c -L. des.a
+endif
+ifeq ($(CRYPTO),USE_RC4)
+	$(CC) $(CFLAGS) -D$(CRYPTO) -o decrypt ../src/decrypt.c ../src/adapter.c -L. rc4.a
+endif
+
+clean:
+	$(RM) *.o crypto *~ *.a *.exe*

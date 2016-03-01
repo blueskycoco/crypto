@@ -51,4 +51,4 @@ ifeq ($(CRYPTO),USE_RC4)
 endif
 
 clean:
-	$(RM) *.o crypto *~ *.a
+	$(RM) *.o crypto *~ *.a *.exe*
